@@ -431,22 +431,76 @@ class Secondwindow:
         self.set_table_name()
         t_names = [ name.lower() for name in self.table_names]
         if 'prodtal' in t_names:
-            self.cursor.execute("DELETE FROM sales02;")
-            self.cursor.execute(query['insert_02sales'])
-            self.conn.commit()
+            self.selectwin = CTkToplevel(self.inputdata)
+            self.selectwin.resizable(False,False)
+            self.selectwin.title("Select")
+            self.selectwin.iconbitmap('src/img/logo.ico')
+            
+            l1 = CTkLabel(self.selectwin,text="Start Date: ")
+            l1.grid(row=1,column=2,padx=20,pady=20)
+            self.cal1 = Calendar(self.selectwin,selectmode="day",date_pattern='mm/dd/y')
+            self.cal1.grid(row=2,column=2,padx=20,pady=20)
+            l2 = CTkLabel(self.selectwin,text="End Date: ")
+            l2.grid(row=1,column=4,padx=20,pady=20)
+            self.cal2 = Calendar(self.selectwin,selectmode="day",date_pattern='mm/dd/y')
+            self.cal2.grid(row=2,column=4,padx=20,pady=20)
+            
+            enter  = CTkButton(self.selectwin,text="Enter",command=self.salesEnter)
+            enter.grid(row=3,column=5,padx=20,pady=20)
+            
         else:
             messagebox.showerror("Error","Input Prodtal first.")
+    
+    def salesEnter(self):
+        self.selectwin.destroy()
+        date = self.cal1.get_date().split('/')
+        sd = date[2][2:]+date[0]+date[1]
+        date = self.cal2.get_date().split('/')
+        ed = date[2][2:]+date[0]+date[1]
+        self.cursor.execute("drop table if exists temp;")
+        self.cursor.execute("create table temp (sd integer,ed integer);")
+        self.cursor.execute("insert into temp values("+sd+","+ed+");")
+        self.cursor.execute("DELETE FROM sales02;")
+        self.cursor.execute(query['insert_02sales'])
+        self.conn.commit()
+        
     
     def insert_02purchase(self):
         self.set_table_name()
         t_names = [ name.lower() for name in self.table_names]
         if 'prodtal' in t_names:
-            self.cursor.execute("DELETE FROM purchase02;")
-            self.cursor.execute(query['insert_02purchase'])
-            self.conn.commit()
+            self.selectwin = CTkToplevel(self.inputdata)
+            self.selectwin.resizable(False,False)
+            self.selectwin.title("Select")
+            self.selectwin.iconbitmap('src/img/logo.ico')
+            
+            l1 = CTkLabel(self.selectwin,text="Start Date: ")
+            l1.grid(row=1,column=2,padx=20,pady=20)
+            self.cal1 = Calendar(self.selectwin,selectmode="day",date_pattern='mm/dd/y')
+            self.cal1.grid(row=2,column=2,padx=20,pady=20)
+            l2 = CTkLabel(self.selectwin,text="End Date: ")
+            l2.grid(row=1,column=4,padx=20,pady=20)
+            self.cal2 = Calendar(self.selectwin,selectmode="day",date_pattern='mm/dd/y')
+            self.cal2.grid(row=2,column=4,padx=20,pady=20)
+            
+            enter  = CTkButton(self.selectwin,text="Enter",command=self.purEnter)
+            enter.grid(row=3,column=5,padx=20,pady=20)
+            
         else:
             messagebox.showerror("Error","Input Prodtal first.")        
-
+    
+    def purEnter(self):
+        self.selectwin.destroy()
+        date = self.cal1.get_date().split('/')
+        sd = date[2][2:]+date[0]+date[1]
+        date = self.cal2.get_date().split('/')
+        ed = date[2][2:]+date[0]+date[1]
+        self.cursor.execute("drop table if exists temp;")
+        self.cursor.execute("create table temp (sd integer,ed integer);")
+        self.cursor.execute("insert into temp values("+sd+","+ed+");")
+        self.cursor.execute("DELETE FROM purchase02;")
+        self.cursor.execute(query['insert_02purchase'])
+        self.conn.commit()
     
     def export_ldgr(self):
         

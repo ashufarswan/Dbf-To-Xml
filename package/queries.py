@@ -418,7 +418,10 @@ query = {
                                 ,s.GST_CGST,s.GST_SGST,s.GST_IGST,NULL,NULL,NULL,NULL,NULL,NULL,NULL,l.Ledger_Group,l.Ledger_Add1,l.Ledger_Add2,
                                 NULL,s.ITEM_DESCRIPTION,NULL
                                
-                                from stockitem s INNER JOIN (ledger l INNER JOIN prodtal pt ON l.alias1 = pt.party_code) ON s.b_code = pt.pro_code WHERE pt.trn_type = '';
+                               FROM ledger l,stockitem s,prodtal pt,temp
+                                WHERE pt.TRN_TYPE == 'P' AND l.ALIAS1 = pt.party_code AND s.b_code == pt.pro_code
+                                and
+                                (CAST(pt.DATE AS INTEGER)>=temp.sd and CAST(pt.DATE AS INTEGER)<=temp.ed);
 
                             """,
     
@@ -434,8 +437,10 @@ query = {
                                 s.BASE_UNITS,pt.DISC_PER,(s.GST_IGST * pt.PRO_QTY) - pt.DISC_PER
                                 ,s.GST_CGST,s.GST_SGST,s.GST_IGST,NULL,NULL,NULL,NULL,NULL,NULL,NULL,l.Ledger_Group,l.Ledger_Add1,l.Ledger_Add2,
                                 NULL,s.ITEM_DESCRIPTION,NULL
-                                FROM ledger l,stockitem s,prodtal pt
-                                WHERE pt.TRN_TYPE == 'P' AND l.ALIAS1 = pt.party_code AND s.b_code == pt.pro_code;
+                                FROM ledger l,stockitem s,prodtal pt,temp
+                                WHERE pt.TRN_TYPE == 'P' AND l.ALIAS1 = pt.party_code AND s.b_code == pt.pro_code
+                                and
+                                (CAST(pt.DATE AS INTEGER)>=temp.sd and CAST(pt.DATE AS INTEGER)<=temp.ed);
                             """,
 
     'insert_stockitem' : """    INSERT INTO stockitem

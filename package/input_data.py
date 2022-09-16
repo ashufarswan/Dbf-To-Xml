@@ -182,21 +182,26 @@ class input_stockitem:
 
     def create_scroll(self):
         #canvas
-        self.frame.geometry("600x800")
+        self.frame.geometry("750x750")
         self.frame.resizable(False, False)
-        canvas = Canvas(self.frame,height=1000,bg="#2a2d2e")
+        canvas = Canvas(self.frame,height=700,bg="#2a2d2e")
         canvas.pack(side=LEFT,fill=BOTH,expand=1)
 
         #scorll bar
-        scroll  = CTkScrollbar(self.frame,orientation=VERTICAL)
-        scroll.pack(side=RIGHT,fill=Y)
+        scrollv  = CTkScrollbar(self.frame,orientation=VERTICAL)
+        scrollv.pack(side=RIGHT,fill=Y)
 
-        canvas.configure(yscrollcommand=scroll.set)
-        scroll.configure(command=canvas.yview)
+        canvas.configure(yscrollcommand=scrollv.set)
+        scrollv.configure(command=canvas.yview)
+
+        
         canvas.bind("<1>",     lambda event: canvas.focus_set())
         canvas.bind('<Configure>',lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
         canvas.bind("<Up>",    lambda event: canvas.yview_scroll(-1, "units"))
         canvas.bind("<Down>",  lambda event: canvas.yview_scroll( 1, "units"))
+        canvas.bind("<Left>",    lambda event: canvas.xview_scroll(-1, "units"))
+        canvas.bind("<Right>",  lambda event: canvas.xview_scroll( 1, "units"))
+
 
         self.frame2  = CTkFrame(canvas,height=600,width=800)
 
@@ -235,9 +240,9 @@ class input_stockitem:
         base_u = CTkLabel(self.frame2,text="Base Unit",text_font=('Helvetica', 16))
         alt_u = CTkLabel(self.frame2,text="Alternate Unit",text_font=('Helvetica', 16))
 
-        stock_name.grid(row=0,column = 1,padx = 10,pady =20)
-        base_u.grid(row=0,column = 3,padx = 10,pady =20)
-        alt_u.grid(row=0,column = 5,padx = 10,pady =20)
+        stock_name.grid(row=0,column = 0,padx = 10,pady =20)
+        base_u.grid(row=0,column = 2,padx = 10,pady =20)
+        alt_u.grid(row=0,column = 4,padx = 10,pady =20)
 
         for j in range(len(names)):
             self.clicked_base.append(StringVar())
@@ -250,11 +255,11 @@ class input_stockitem:
             self.op2.append(CTkComboBox(master = self.frame2,variable = self.clicked_alt[j],values =list(self.units.keys())))
     
             
-            self.label[j].grid(row = j+1,column = 1,padx = 10,pady =20)
-            self.op1[j].grid(row = j+1,column = 3,padx = 10,pady =20)
-            self.op2[j].grid(row = j+1,column = 5,padx = 10,pady =20)
+            self.label[j].grid(row = j+1,column = 0,padx = 10,pady =20)
+            self.op1[j].grid(row = j+1,column = 2,padx = 10,pady =20)
+            self.op2[j].grid(row = j+1,column = 4,padx = 10,pady =20)
         
-            next.grid(row = 13,column = 5,padx = 5,pady =20)
+            next.grid(row = 13,column = 4,padx = 5,pady =20)
     
     
     def save(self,names):
