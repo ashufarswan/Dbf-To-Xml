@@ -182,29 +182,22 @@ class input_stockitem:
 
     def create_scroll(self):
         #canvas
-        self.frame.geometry("750x750")
+        self.frame.geometry("900x750")
         self.frame.resizable(False, False)
-        canvas = Canvas(self.frame,height=700,bg="#2a2d2e")
-        canvas.pack(side=LEFT,fill=BOTH,expand=1)
+        canvas = Canvas(self.frame,height=750,width=900,bg="#2a2d2e")
+        canvas.pack(side=LEFT,fill=BOTH,expand=True)
 
         #scorll bar
         scrollv  = CTkScrollbar(self.frame,orientation=VERTICAL)
         scrollv.pack(side=RIGHT,fill=Y)
-
+        
         canvas.configure(yscrollcommand=scrollv.set)
         scrollv.configure(command=canvas.yview)
-
-        
-        canvas.bind("<1>",     lambda event: canvas.focus_set())
-        canvas.bind('<Configure>',lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.bind("<Up>",    lambda event: canvas.yview_scroll(-1, "units"))
-        canvas.bind("<Down>",  lambda event: canvas.yview_scroll( 1, "units"))
-        canvas.bind("<Left>",    lambda event: canvas.xview_scroll(-1, "units"))
-        canvas.bind("<Right>",  lambda event: canvas.xview_scroll( 1, "units"))
-
-
-        self.frame2  = CTkFrame(canvas,height=600,width=800)
-
+       
+        self.frame2  = CTkFrame(canvas,height=700,width=900)
+        self.frame2.pack(fill='both',expand=True)
+        self.frame2.bind('<Configure>',lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+       
         canvas.create_window((0,0),window=self.frame2,anchor="nw")  
         self.input_base_unit()
 
