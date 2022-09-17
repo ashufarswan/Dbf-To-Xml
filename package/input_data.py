@@ -1,3 +1,5 @@
+from doctest import master
+from venv import create
 import pandas as pd
 from .queries import query
 from tkinter import *
@@ -178,33 +180,41 @@ class input_stockitem:
         self.conn.commit()
         for widget in self.frame.winfo_children():
             widget.destroy()
-        self.create_scroll()
+        self.s = IntVar()
+        l = CTkLabel(master=self.frame,text="Want to input all Base unit as PCS:").grid(row=1, column=0, padx=20, pady=10)
+        self.b1 = CTkRadioButton(master=self.frame, text="Yes", variable=self.s, value=1,
+                            ).grid(row=1, column=1, padx=20, pady=10)
+        self.b2 = CTkRadioButton(master=self.frame, text="No", variable=self.s, value=2,
+                            ).grid(row=1, column=2, padx=20, pady=10)
+        b3 = CTkButton(master=self.frame,text = "Enter",command=self.allpcs).grid(row=2, column=2, padx=20, pady=10)
+    
+    def allpcs(self):
+        if(self.s.get()==1):
+            self.save(None)
+        else:
+            for widget in self.frame.winfo_children():
+                widget.destroy()
+        
+            self.create_scroll()
 
     def create_scroll(self):
         #canvas
-        self.frame.geometry("750x750")
+        self.frame.geometry("900x750")
         self.frame.resizable(False, False)
-        canvas = Canvas(self.frame,height=700,bg="#2a2d2e")
-        canvas.pack(side=LEFT,fill=BOTH,expand=1)
+        canvas = Canvas(self.frame,height=750,width=900,bg="#2a2d2e")
+        canvas.pack(side=LEFT,fill=BOTH,expand=True)
 
         #scorll bar
         scrollv  = CTkScrollbar(self.frame,orientation=VERTICAL)
         scrollv.pack(side=RIGHT,fill=Y)
-
+        
         canvas.configure(yscrollcommand=scrollv.set)
         scrollv.configure(command=canvas.yview)
-
-        
-        canvas.bind("<1>",     lambda event: canvas.focus_set())
-        canvas.bind('<Configure>',lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.bind("<Up>",    lambda event: canvas.yview_scroll(-1, "units"))
-        canvas.bind("<Down>",  lambda event: canvas.yview_scroll( 1, "units"))
-        canvas.bind("<Left>",    lambda event: canvas.xview_scroll(-1, "units"))
-        canvas.bind("<Right>",  lambda event: canvas.xview_scroll( 1, "units"))
-
-
-        self.frame2  = CTkFrame(canvas,height=600,width=800)
-
+       
+        self.frame2  = CTkFrame(canvas,height=700,width=900)
+        self.frame2.pack(fill='both',expand=True)
+        self.frame2.bind('<Configure>',lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+       
         canvas.create_window((0,0),window=self.frame2,anchor="nw")  
         self.input_base_unit()
 
@@ -222,7 +232,7 @@ class input_stockitem:
                  'YARDS', 'OTH': 'OTHERS'}
         
         
-        if self.i+10 > len(self.stock_name):
+        if self.i+9 > len(self.stock_name):
             names = self.stock_name[self.i:len(self.stock_name)]
             next = CTkButton(self.frame2,text="Save",command=lambda:self.save(names),height=2,width=15,borderwidth=4)
 
@@ -263,25 +273,36 @@ class input_stockitem:
     
     
     def save(self,names):
-        for i in range(len(names)):
-            self.u_dict[names[i][0]][0] = self.clicked_base[i].get() 
-            self.u_dict[names[i][0]][1] =  self.clicked_alt[i].get()
-            self.u_dict[names[i][0]][2] =  self.units[self.clicked_base[i].get()]
-            self.u_dict[names[i][0]][3] = self.units[self.clicked_alt[i].get()] 
-
         n = []
         bu = []
         au = []
         bfn = []
         afn =  []
         
-        for key in self.u_dict:
-            n.append(key)
-            bu.append(self.u_dict[key][0])
-            au.append(self.u_dict[key][1])
-            bfn.append(self.u_dict[key][2])
-            afn.append(self.u_dict[key][3])
+        if(self.s.get() !=1):
+            for i in range(len(names)):
+                self.u_dict[names[i][0]][0] = self.clicked_base[i].get() 
+                self.u_dict[names[i][0]][1] =  self.clicked_alt[i].get()
+                self.u_dict[names[i][0]][2] =  self.units[self.clicked_base[i].get()]
+                self.u_dict[names[i][0]][3] = self.units[self.clicked_alt[i].get()] 
+
         
+            for key in self.u_dict:
+                n.append(key)
+                bu.append(self.u_dict[key][0])
+                au.append(self.u_dict[key][1])
+                bfn.append(self.u_dict[key][2])
+                afn.append(self.u_dict[key][3])
+            
+        else:
+            for name in self.stock_name:
+                n.append(name[0])
+                bu.append('PCS')
+                au.append(' ')
+                bfn.append('PIECES')
+                afn.append(' ')
+            
+
         self.unit = {'Stock_name': n,
                      'base_unit': bu,
                      'alt_unit' : au,
@@ -319,7 +340,7 @@ class input_stockitem:
         for widget in self.frame2.winfo_children():
             widget.destroy()
         self.frame2.pack_forget()
-        self.i  = self.i + 10
+        self.i  = self.i + 9
         self.input_base_unit()
 
 
