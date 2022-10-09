@@ -419,7 +419,7 @@ query = {
                                 NULL,s.ITEM_DESCRIPTION,NULL
                                
                                FROM ledger l,stockitem s,prodtal pt,temp
-                                WHERE pt.TRN_TYPE == 'P' AND l.ALIAS1 = pt.party_code AND s.b_code == pt.pro_code
+                                WHERE pt.TRN_TYPE == '' AND l.ALIAS1 = pt.party_code AND s.b_code == pt.pro_code
                                 and
                                 (CAST(pt.DATE AS INTEGER)>=temp.sd and CAST(pt.DATE AS INTEGER)<=temp.ed);
 
@@ -429,7 +429,7 @@ query = {
                                 INSERT INTO purchase02 
                                 SELECT pt.BILL_NO,
                                 SUBSTR(pt.DATE,5,6) ||'-'||SUBSTR(pt.DATE,3,2) ||'- 20' || SUBSTR(pt.DATE,1,2),
-                                'UTTARAKHAND',l.Ledger_Name,l.GSTIN_Number,l.GST_Registration_Type,l.State,'Sales',pt.NARATION,
+                                'UTTARAKHAND',l.Ledger_Name,l.GSTIN_Number,l.GST_Registration_Type,l.State,'Purchase',pt.NARATION,
                                 'GST SALES@'||CAST(S.GST_IGST AS VARCHAR)||'%',
                                 s.STOCK_ITEM_NAME,s.GST_TAXABILITY,S.GST_IGST,s.GST_HSN,s.GST_HSN_DESCRIPTION,s.GROUP_NAME,
                                 s.MRP_RATE,pt.GODOWN,pt.PRO_QTY,

@@ -700,7 +700,7 @@ class Secondwindow:
                 query['insert_cashdeposit_AccMultipleDaybookStyle'])
         else:
             self.cursor.execute(
-                query['insert_scashdeposit_AccountingSingleVch'])
+                query['insert_cashdeposit_AccountingSingleVch'])
 
         if self.check.get() == 1:
             self.cursor.execute(query['insert_contra_AccMultipleDaybookStyle'])
